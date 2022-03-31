@@ -81,13 +81,22 @@ int main(void){
 	int output[countA];
 	
 	//TODO: code your golden standard matrix multiplication here
+
+
+	//sequential  code for n*n  matrix multiplication
+	
 	int start = clock(); //start running clock
-        //Some code
-        int end = clock();
+
+	for(int i=0; i<countA; i++){
+	  int sum = 0;
+	  for(int j=0; j<Size; j++){
+		sum = sum + matrixA[i] * matrixB[j];
+	  }
+	   output[i] = sum;
+	}
+
+	int end = clock();
 	printf ("Run Time: %0.8f sec \n",((float) end - start)/CLOCKS_PER_SEC);
-		
-	
-	
 	
 	//This if statement will display the matrix in output	
 	if(displayMatrices){

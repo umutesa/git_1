@@ -1,43 +1,34 @@
-
-//TODO: set your arguments for the kernel. Note that you have to indicate if the argument is global or local. Global arguments are accessable by both host and this target device. While local can only be accessed by the device running this kernel. eg __global int* inputMatrixA, __local int* groupMemory
-
-__kernel void matrixMultiplication(__global int* matrixA, __global int* matrixB, __global int* output,__local int* localMemoryBlockPointer){
+__kernel void matrixMultiplication(__global int* matrixA, __global int* matrixB, __global int* output){
 	
 	//TODO: program your kernel here
 	
-//	int workItemNum = get_global_id(0); //Work item ID
-//        int size = get_global_size(0);
+	int workItemNum = get_global_id(0); //work item ID
+	int workGroupNum = get_group_id(0); //work group ID	
+	int localGroupID = get_local_id(0); //work items ID within each work group
+	int gsize = get_global_size(0);   //global size
+	int lsize = get_local_size(0);	//local size
+
+	//memory buffers
+
+	int* mA = matrixA; //pointer to matrix A
+	int* mB = matrixB;  //pointer to matrix B
+	uint global_addr = workItemNum;
 
 
-//	int matA = *matrixA;
-//	int matB = *matrixB;
-//	uint global_addr = workItemNum;
+	int col = workGroupNum; //col 
+	int row = workItemNum%lsize; //row 
+	int sum = 0;
 
+	for(int i = 0; i < lsize; i ++) //repeat nxn times
+	{
+		sum += mA[col*lsize+i] * mB[lsize*i+row]; 
+	}
 	
-//	printf("Hi from work item Num: %-3d Matrix1: %-5d Matrix2: %-5d\n", workItemNum, *matrixA,  *matrixB);
+	output[col*lsize+row] = sum;
 
-//	printf("Hi from work item Num: %-3d Matrix1: %-5d Matrix2: %-5d\n", workItemNum, matrixA[1],  matrixB[1]); 
-  
-//	if (workItemNum < size ) {
-
-//        for(int i = 0; i<3; i++){
-
-//            for(int j = 0; j<3; j++){
-
-//	      localMemoryBlockPointer[0] = matrixA[workItemNum + i*3+j];
-      	//      localMemoryBlockPointer[1] = matrixB[workItemNum + i*3+j];
-      	 //     localMemoryBlockPointer[2] = localMemoryBlockPointer[0] * localMemoryBlockPointer[1];
-    	 //     output[workItemNum] =  localMemoryBlockPointer[2];
-
-//	}	
-  //  }
-
-
-
-     
-		
 	
 }
+
 
 
 
