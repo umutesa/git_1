@@ -65,7 +65,7 @@ int main(void)
 
 	//New code for prac 2.2
 	bool displayMatrices = true;
-	int Size = 3;
+	int Size = 8;
 	int countA = Size*Size;
 	int matrixA[countA];
 	createKnownSquareMatrix(Size,matrixA,displayMatrices);
@@ -249,11 +249,11 @@ int main(void)
 	//TODO: create matrixA_buffer, matrixB_buffer and output_buffer, with clCreateBuffer()
 	
 	
-	matrixA_buffer = clCreateBuffer(context,CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,global_size*local_size*sizeof(int), &matrixA, &err);
+	matrixA_buffer = clCreateBuffer(context,CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,global_size*sizeof(int), &matrixA, &err);
 
-	matrixB_buffer = clCreateBuffer(context,CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,global_size*local_size*sizeof(int), &matrixB, &err);
+	matrixB_buffer = clCreateBuffer(context,CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,global_size*sizeof(int), &matrixB, &err);
 	
-	output_buffer = clCreateBuffer(context,CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,global_size*local_size*sizeof(int), output, &err);
+	output_buffer = clCreateBuffer(context,CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,global_size*sizeof(int), output, &err);
 
 
 	//------------------------------------------------------------------------
@@ -288,6 +288,7 @@ int main(void)
 	//					cl_event *event)
 	
 	
+	start = clock();
 	
 	cl_int err4 = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
 	
@@ -304,6 +305,9 @@ int main(void)
 	//This command stops the program here until everything in the queue has been run
 	clFinish(queue);
 	
+
+	end = clock();
+//	printf ("Run Time: %0.8f sec \n",((float) end - start)/CLOCKS_PER_SEC);
 	
 	//***Step 13*** Check that the host was able to retrieve the output data from the output buffer
 	
@@ -317,7 +321,8 @@ int main(void)
 		}
 	}
 	
-	
+	printf ("Run Time: %0.8f sec \n",((float) end - start)/CLOCKS_PER_SEC);	
+
 	//------------------------------------------------------------------------
 
 	//***Step 14*** Deallocate resources	
